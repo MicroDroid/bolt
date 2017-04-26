@@ -1,6 +1,5 @@
 {
   "name": "bolt",
-  "version": "0.1.0",
   "description": "A bot that bolts",
   "main": "index.js",
   "scripts": {
