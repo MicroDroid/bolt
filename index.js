@@ -10,7 +10,7 @@ const reload = require('require-reload')(require);
 console.log('[+] Starting..');
 
 fs.readdir('./plugins', (err, files) => {
-	files.forEach(f => {
+	files.filter(f => f.endsWith('.js')).forEach(f => {
 		const name = f.substr(0, f.length - 3);
 		try {
 			const Module = reload(`./plugins/${f}`);
