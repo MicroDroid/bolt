@@ -1,0 +1,17 @@
+{
+  "name": "bolt",
+  "version": "0.1.0",
+  "description": "A bot that bolts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yousef Sultan",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "require-reload": "^0.2.2",
+    "slackbots": "^1.0.2",
+    "watch": "^1.0.2"
+  }
+}
