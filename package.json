@@ -8,6 +8,7 @@
   "author": "Yousef Sultan",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.16.1",
     "dotenv": "^4.0.0",
     "require-reload": "^0.2.2",
     "slackbots": "^1.0.2",
