@@ -3,9 +3,9 @@ let handlers = {
 };
 
 module.exports = {
-	handle: (message, bot) => {
+	handle: (message, event, bot) => {
 		if (handlers[message.command])
-			handlers[message.command](message, bot);
+			handlers[message.command](message, event, bot);
 	},
 
 	register: (command, handler) => {
