@@ -15,8 +15,7 @@ module.exports = {
 	},
 
 	unregister: (command) => {
-		if (!handlers[command])
-			throw `Unregistering non-existant handler '${command}'`;
-		delete handlers[command];
+		if (handlers[command])
+			delete handlers[command];
 	}
 }
