@@ -1,7 +1,7 @@
 Bolt
 ========
 
-Bolt is a simple, easy to use Slack bot intended to have high flexibility to add plugins, with features such as automatic hot-reloading of plugins.
+The best bot since mankind.
 
 Usage
 -----
