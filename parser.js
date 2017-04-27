@@ -7,7 +7,7 @@ module.exports = {
 		if (!command.startsWith(process.env.PREFIX))
 			return false;
 
-		command = command.substr(1);
+		command = command.substr(process.env.PREFIX.length);
 
 		args = str.indexOf(' ') > -1 ? str.substr(str.indexOf(' ') + 1, str.length) : '';
 		argWords = args.split(' ');
