@@ -10,62 +10,62 @@ const reload = require('require-reload')(require);
 console.log('[+] Starting..');
 
 fs.readdir('./plugins', (err, files) => {
-	files.filter(f => f.endsWith('.js')).forEach(f => {
-		const name = f.substr(0, f.length - 3);
-		try {
-			const Module = reload(`./plugins/${f}`);
-			Handler.register(name, Module.handle);
-			console.log(`[+] Loaded '${name}'`);
-		} catch (e) {
-			console.log(`[!] Failed to unload/load '${name}': ${e}`);
-		}
-	});
+    files.filter(f => f.endsWith('.js')).forEach(f => {
+        const name = f.substr(0, f.length - 3);
+        try {
+            const Module = reload(`./plugins/${f}`);
+            Handler.register(name, Module.handle);
+            console.log(`[+] Loaded '${name}'`);
+        } catch (e) {
+            console.log(`[!] Failed to unload/load '${name}': ${e}`);
+        }
+    });
 });
 
 Watch.watchTree('./plugins', {
-	filter: filename => filename.endsWith('.js')
+    filter: filename => filename.endsWith('.js')
 }, (f, curr, prev) => {
-	const name = typeof(f) === 'string' ? (f.startsWith('plugins/') ? f.slice(8, -3): f) : '';
-	try {
-		if (typeof f == 'object' && prev === null && curr === null) {
-			// Finished walking the tree
-		} else if (prev === null) {
-			// f is a new file
-			const Module = reload(`./${f}`);
-			Handler.register(name, Module.handle);
-			console.log(`[+] Loaded '${name}'`);
-		} else if (curr.nlink === 0) {
-			// f was removed
-			Handler.unregister(name);
-			console.log(`[+] Unloaded '${name}'`);
-		} else {
-			// f was changed
-			const Module = reload(`./${f}`);
-			Handler.unregister(name);
-			Handler.register(name, Module.handle);
-			console.log(`[+] Reloaded '${name}'`);
-		}
-	} catch (e) {
-		console.log(`[!] Failed to unload/load '${name}': ${e}`);
-	}
+    const name = typeof(f) === 'string' ? (f.startsWith('plugins/') ? f.slice(8, -3): f) : '';
+    try {
+        if (typeof f == 'object' && prev === null && curr === null) {
+            // Finished walking the tree
+        } else if (prev === null) {
+            // f is a new file
+            const Module = reload(`./${f}`);
+            Handler.register(name, Module.handle);
+            console.log(`[+] Loaded '${name}'`);
+        } else if (curr.nlink === 0) {
+            // f was removed
+            Handler.unregister(name);
+            console.log(`[+] Unloaded '${name}'`);
+        } else {
+            // f was changed
+            const Module = reload(`./${f}`);
+            Handler.unregister(name);
+            Handler.register(name, Module.handle);
+            console.log(`[+] Reloaded '${name}'`);
+        }
+    } catch (e) {
+        console.log(`[!] Failed to unload/load '${name}': ${e}`);
+    }
 });
 
 const bot = new SlackBots({
-	token: process.env.TOKEN,
-	name: 'Bolt',
+    token: process.env.TOKEN,
+    name: 'Bolt',
 });
 
 bot.on('message', data => {
-	if (data.type === 'message') {
-		console.log(`[+] ${data.user}: ${data.text}`);
-		const message = data.text;
-		const parsed = Parser.parse(message);
+    if (data.type === 'message') {
+        console.log(`[+] ${data.user}: ${data.text}`);
+        const message = data.text;
+        const parsed = Parser.parse(message);
 
-		if (parsed)
-			Handler.handle(parsed, data, bot);
-	}
+        if (parsed)
+            Handler.handle(parsed, data, bot);
+    }
 });
 
 bot.on('start', () => {
-	console.log('[+] Connected!');
+    console.log('[+] Connected!');
 });
