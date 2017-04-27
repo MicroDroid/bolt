@@ -62,7 +62,7 @@ bot.on('message', data => {
 		const parsed = Parser.parse(message);
 
 		if (parsed)
-			Handler.handle(parsed, message, bot);
+			Handler.handle(parsed, data, bot);
 	}
 });
 
