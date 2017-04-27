@@ -63,6 +63,15 @@ PROFIT!
 
 ------------
 
+But one last thing, you need to create a `.env` file in the root directory of the project. You'll have to put in it something like:
+
+```
+TOKEN=<your bot token>
+PREFIX=<prefix such as exclamation>
+```
+
+..and you're done.
+
 All plugins are automatically hot-reloaded, and if a plugin fails to load, the old code will still be running.
 
 Each plugin **must** export a `handle` function, which gets fed up with `message`, `event`, and `bot` params:
