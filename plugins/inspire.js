@@ -1,4 +1,5 @@
 const axios = require('axios');
+const logger = require('../logger');
 
 module.exports = {
 	handle: (message, event, bot) => {
@@ -6,6 +7,7 @@ module.exports = {
 			.then(response => {
 				bot.postMessage(event.channel, `${response.data.quoteAuthor} says: ${response.data.quoteText}`);
 			}).catch(error => {
+				logger.err(error.toString());
 				bot.postMessage(event.channel, 'API seems down');
 			})
 	}

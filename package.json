@@ -9,9 +9,11 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.16.1",
+    "colors": "^1.1.2",
     "dotenv": "^4.0.0",
     "require-reload": "^0.2.2",
     "slackbots": "^1.0.2",
+    "telebot": "^1.0.7",
     "watch": "^1.0.2"
   }
 }

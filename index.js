@@ -6,8 +6,9 @@ const Handler = require('./handler');
 const Watch = require('watch');
 const fs = require('fs');
 const reload = require('require-reload')(require);
+const logger = require('./logger');
 
-console.log('[+] Starting..');
+logger.info('Starting..');
 
 fs.readdir('./plugins', (err, files) => {
 	files.filter(f => f.endsWith('.js')).forEach(f => {
@@ -15,9 +16,9 @@ fs.readdir('./plugins', (err, files) => {
 		try {
 			const Module = reload(`./plugins/${f}`);
 			Handler.register(name, Module.handle);
-			console.log(`[+] Loaded '${name}'`);
+			logger.info(`Loaded '${name}'`);
 		} catch (e) {
-			console.log(`[!] Failed to unload/load '${name}': ${e}`);
+			logger.warn(`Failed to unload/load '${name}': ${e}`);
 		}
 	});
 });
@@ -33,31 +34,32 @@ Watch.watchTree('./plugins', {
 			// f is a new file
 			const Module = reload(`./${f}`);
 			Handler.register(name, Module.handle);
-			console.log(`[+] Loaded '${name}'`);
+			logger.info(`Loaded '${name}'`);
 		} else if (curr.nlink === 0) {
 			// f was removed
 			Handler.unregister(name);
-			console.log(`[+] Unloaded '${name}'`);
+			logger.info(`Unloaded '${name}'`);
 		} else {
 			// f was changed
 			const Module = reload(`./${f}`);
 			Handler.unregister(name);
 			Handler.register(name, Module.handle);
-			console.log(`[+] Reloaded '${name}'`);
+			logger.info(`Reloaded '${name}'`);
 		}
 	} catch (e) {
-		console.log(`[!] Failed to unload/load '${name}': ${e}`);
+		logger.warn(`Failed to unload/load '${name}': ${e}`);
 	}
 });
 
 const bot = new SlackBots({
 	token: process.env.TOKEN,
 	name: 'Bolt',
+	as_user: false,
 });
 
 bot.on('message', data => {
 	if (data.type === 'message') {
-		console.log(`[+] ${data.user}: ${data.text}`);
+		logger.recv(`${data.user}: ${data.text}`);
 		const message = data.text;
 		const parsed = Parser.parse(message);
 
@@ -67,5 +69,5 @@ bot.on('message', data => {
 });
 
 bot.on('start', () => {
-	console.log('[+] Connected!');
+	logger.info('Connected!');
 });
