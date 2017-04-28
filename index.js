@@ -24,7 +24,7 @@ fs.readdir('./plugins', (err, files) => {
 });
 
 Watch.watchTree('./plugins', {
-	filter: filename => filename.endsWith('.js')
+    filter: filename => filename.endsWith('.js')
 }, (f, curr, prev) => {
 	const name = typeof(f) === 'string' ? (f.startsWith('plugins/') ? f.slice(8, -3): f) : '';
 	try {
@@ -65,16 +65,27 @@ bot.postMessage = function (id, text, params) {
 }
 logger.err('lel');
 bot.on('message', data => {
+<<<<<<< HEAD
 	if (data.type === 'message' && data.subtype !== 'bot_message') {
 		logger.recv(`${data.user}@${data.channel}: ${data.text}`);
 		const message = data.text;
 		const parsed = Parser.parse(message);
+=======
+    if (data.type === 'message') {
+        console.log(`[+] ${data.user}: ${data.text}`);
+        const message = data.text;
+        const parsed = Parser.parse(message);
+>>>>>>> 1f7466049ece27afa1e2d5c62a18267e715f43e3
 
-		if (parsed)
-			Handler.handle(parsed, data, bot);
-	}
+        if (parsed)
+            Handler.handle(parsed, data, bot);
+    }
 });
 
 bot.on('start', () => {
+<<<<<<< HEAD
 	logger.info('Connected!');
+=======
+    console.log('[+] Connected!');
+>>>>>>> 1f7466049ece27afa1e2d5c62a18267e715f43e3
 });
