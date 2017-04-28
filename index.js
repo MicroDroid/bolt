@@ -57,9 +57,16 @@ const bot = new SlackBots({
 	as_user: false,
 });
 
+const originalPostMessage = bot.postMessage;
+
+bot.postMessage = function (id, text, params) {
+	logger.send(`${id}: ${text}`);
+	originalPostMessage.call(this, id, text, params);
+}
+logger.err('lel');
 bot.on('message', data => {
-	if (data.type === 'message') {
-		logger.recv(`${data.user}: ${data.text}`);
+	if (data.type === 'message' && data.subtype !== 'bot_message') {
+		logger.recv(`${data.user}@${data.channel}: ${data.text}`);
 		const message = data.text;
 		const parsed = Parser.parse(message);
 
