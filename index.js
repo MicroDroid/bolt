@@ -65,17 +65,10 @@ bot.postMessage = function (id, text, params) {
 }
 logger.err('lel');
 bot.on('message', data => {
-<<<<<<< HEAD
 	if (data.type === 'message' && data.subtype !== 'bot_message') {
 		logger.recv(`${data.user}@${data.channel}: ${data.text}`);
 		const message = data.text;
 		const parsed = Parser.parse(message);
-=======
-    if (data.type === 'message') {
-        console.log(`[+] ${data.user}: ${data.text}`);
-        const message = data.text;
-        const parsed = Parser.parse(message);
->>>>>>> 1f7466049ece27afa1e2d5c62a18267e715f43e3
 
         if (parsed)
             Handler.handle(parsed, data, bot);
@@ -83,9 +76,5 @@ bot.on('message', data => {
 });
 
 bot.on('start', () => {
-<<<<<<< HEAD
 	logger.info('Connected!');
-=======
-    console.log('[+] Connected!');
->>>>>>> 1f7466049ece27afa1e2d5c62a18267e715f43e3
 });
