@@ -63,7 +63,7 @@ bot.postMessage = function (id, text, params) {
 	logger.send(`${id}: ${text}`);
 	originalPostMessage.call(this, id, text, params);
 }
-logger.err('lel');
+
 bot.on('message', data => {
 	if (data.type === 'message' && data.subtype !== 'bot_message') {
 		logger.recv(`${data.user}@${data.channel}: ${data.text}`);
