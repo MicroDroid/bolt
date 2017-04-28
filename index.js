@@ -15,6 +15,8 @@ fs.readdir('./plugins', (err, files) => {
 		const name = f.substr(0, f.length - 3);
 		try {
 			const Module = reload(`./plugins/${f}`);
+            if (Module.create)
+                Module.create(bot);
 			Handler.register(name, Module.handle);
 			logger.info(`Loaded '${name}'`);
 		} catch (e) {
@@ -33,6 +35,8 @@ Watch.watchTree('./plugins', {
 		} else if (prev === null) {
 			// f is a new file
 			const Module = reload(`./${f}`);
+            if (Module.create)
+                Module.create(bot);
 			Handler.register(name, Module.handle);
 			logger.info(`Loaded '${name}'`);
 		} else if (curr.nlink === 0) {
@@ -42,6 +46,8 @@ Watch.watchTree('./plugins', {
 		} else {
 			// f was changed
 			const Module = reload(`./${f}`);
+            if (Module.create)
+                Module.create(bot);
 			Handler.unregister(name);
 			Handler.register(name, Module.handle);
 			logger.info(`Reloaded '${name}'`);

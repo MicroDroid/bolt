@@ -72,6 +72,19 @@ PREFIX=<prefix such as exclamation>
 
 ..and you're done.
 
+--------------
+
+Plugins are also starting to have some sort of a shape of lifecycle hooks. Currently, there's only the `create` hook which gets called right after the plugin has been loaded, and takes `bot` as a param:
+
+```
+module.exports = {
+	create: bot => {
+		// Do some fancy stuff.
+		// You can register some listeners for events here too
+	}
+}
+```
+
 All plugins are automatically hot-reloaded, and if a plugin fails to load, the old code will still be running.
 
 Each plugin **must** export a `handle` function, which gets fed up with `message`, `event`, and `bot` params:
