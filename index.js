@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const SlackBots = require('slackbots');
 const Parser = require('./parser');
-const Handler = require('./handler');
+const ModuleManager = require('./module-manager');
 const Watch = require('watch');
 const fs = require('fs');
 const reload = require('require-reload')(require);
@@ -14,10 +14,8 @@ fs.readdir('./plugins', (err, files) => {
 	files.filter(f => f.endsWith('.js')).forEach(f => {
 		const name = f.substr(0, f.length - 3);
 		try {
-			const Module = reload(`./plugins/${f}`);
-            if (Module.create)
-                Module.create(bot);
-			Handler.register(name, Module.handle);
+			const module = reload(`./plugins/${f}`);
+			ModuleManager.register(name, module);
 			logger.info(`Loaded '${name}'`);
 		} catch (e) {
 			logger.warn(`Failed to unload/load '${name}': ${e}`);
@@ -35,25 +33,21 @@ Watch.watchTree('./plugins', {
 		} else if (prev === null) {
 			// f is a new file
 			const Module = reload(`./${f}`);
-            if (Module.create)
-                Module.create(bot);
-			Handler.register(name, Module.handle);
+			ModuleManager.register(name, module);
 			logger.info(`Loaded '${name}'`);
 		} else if (curr.nlink === 0) {
 			// f was removed
-			Handler.unregister(name);
+			ModuleManager.unregister(name);
 			logger.info(`Unloaded '${name}'`);
 		} else {
 			// f was changed
-			const Module = reload(`./${f}`);
-            if (Module.create)
-                Module.create(bot);
-			Handler.unregister(name);
-			Handler.register(name, Module.handle);
+			const module = reload(`./${f}`);
+			ModuleManager.unregister(name);
+			ModuleManager.register(name, module);
 			logger.info(`Reloaded '${name}'`);
 		}
 	} catch (e) {
-		logger.warn(`Failed to unload/load '${name}': ${e}`);
+		logger.warn(`Failed to reload '${name}': ${e}`);
 	}
 });
 
@@ -77,7 +71,7 @@ bot.on('message', data => {
 		const parsed = Parser.parse(message);
 
         if (parsed)
-            Handler.handle(parsed, data, bot);
+            ModuleManager.handle(parsed, data, bot);
     }
 });
 
