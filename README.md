@@ -10,82 +10,23 @@ Usage
 git clone https://github.com/syk-yaman/bolt
 cd ./bolt
 npm i
+echo "TOKEN=<your bot token>
+PREFIX=<prefix such as exclamation>"
 node .
 ```
 
 Writing plugins
 --------
 
-Writing plugins is extremely simple. Just follow the steps below:
+Plugins are the heart of bolt. Plugins are so flexible that you can write plugins in as much code as they need, they're so powerful that you could create things like relays.
 
-###### Step #1
+Plugins have lifecycles, starts with `onCreate` when the plugin is loaded, and ends with `onDestroy` when the plugin is just about to die.
 
-Create the file:
-
-```
-touch ./plugins/test.js
-```
-
-###### Step #2
-
-Put things in the file:
-
-```JavaScript
-module.exports = {
-    handle: (message, bot) => {
-        console.log('yay my plugin works!');
-    }
-}
-```
-
-###### Step #3
-
-Test your plugin:
-
-```
-<me>   !test
-```
-
-In console:
-
-```
-[+] Reloaded 'test'
-[+] LOLNICEID: !test
-yay my plugins works!
-```
-
-###### Step #4
-
-???
-
-PROFIT!
-
-
-------------
-
-But one last thing, you need to create a `.env` file in the root directory of the project. You'll have to put in it something like:
-
-```
-TOKEN=<your bot token>
-PREFIX=<prefix such as exclamation>
-```
-
-..and you're done.
-
---------------
-
-Plugins are also starting to have some sort of a shape of lifecycle hooks. Currently, there's only the `create` hook which gets called right after the plugin has been loaded, and takes `bot` as a param:
-
-```
-module.exports = {
-	create: bot => {
-		// Do some fancy stuff.
-		// You can register some listeners for events here too
-	}
-}
-```
+Filenames of plugins reserve and represent a command name. i.e. an `inspire.js` plugin reserves the command `inspire`, and everytime someone says something starting with something like `!inspire`, the `handle` method of that plugin gets loaded.
 
 All plugins are automatically hot-reloaded, and if a plugin fails to load, the old code will still be running.
+
+--------------
 
 Each plugin **must** export a `handle` function, which gets fed up with `message`, `event`, and `bot` params:
 
@@ -96,3 +37,27 @@ Each plugin **must** export a `handle` function, which gets fed up with `message
     - `argWords` Arguments. array of argument words
 - `event` is the message event that Slack returns
 - `bot` is a uh, a [`Slackbots`](https://github.com/mishk0/slack-bot-api)
+
+Here's an example plugin that utilizes all features:
+
+###### test.js
+```JavaScript
+module.exports = {
+    handle: (message, event, bot) => {
+        // Someone said !test
+        // Here you can handle the command.
+    },
+
+    onCreate: bot => {
+        // Bot is a Slackbots instance
+        // Do whatever. Such as initialize a connection,
+        // Listen to an event.
+    },
+
+    onDestroy: bot => {
+        // Bot is also Slackbots instance
+        // And you can listen to also whatever, close a connection,
+        // Remove event listener.
+    }
+}
+```
