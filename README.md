@@ -28,13 +28,16 @@ All plugins are automatically hot-reloaded, and if a plugin fails to load, the o
 
 --------------
 
-Each plugin **must** export a `handle` function, which gets fed up with `message`, `event`, and `bot` params:
+Each plugin **must** export a `handle` function, which gets fed up with `message`, `event`, `datastore`, and `bot` params:
 
 - `message` is a parsed message, which conains the following properties:
     - `raw` The message itself with absolutely no formatting
     - `command` The command, with prefix striped out (i.e. `test`, not `!test`)
     - `args` Arguments, full string
     - `argWords` Arguments. array of argument words
+- `datastore` is a very simply key/value store.
+    - `get(key)` Returns a promise, which returns the value. `null` or `undefined` if non-existant
+    - `set(key, value)` Sets value of `key` to `value`. Returns a promise.
 - `event` is the message event that Slack returns
 - `bot` is a uh, a [`Slackbots`](https://github.com/mishk0/slack-bot-api)
 
@@ -43,18 +46,18 @@ Here's an example plugin that utilizes all features:
 ###### test.js
 ```JavaScript
 module.exports = {
-    handle: (message, event, bot) => {
+    handle: (message, event, datastore, bot) => {
         // Someone said !test
         // Here you can handle the command.
     },
 
-    onCreate: bot => {
+    onCreate: (datastore, bot) => {
         // Bot is a Slackbots instance
         // Do whatever. Such as initialize a connection,
         // Listen to an event.
     },
 
-    onDestroy: bot => {
+    onDestroy: (datastore, bot) => {
         // Bot is also Slackbots instance
         // And you can listen to also whatever, close a connection,
         // Remove event listener.

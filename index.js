@@ -6,19 +6,21 @@ const ModuleManager = require('./module-manager');
 const Watch = require('watch');
 const fs = require('fs');
 const reload = require('require-reload')(require);
-const logger = require('./logger');
+const Logger = require('./logger');
 
-logger.info('Starting..');
+Logger.info('Starting..');
+
+const Datastore = require('./datastore');
 
 fs.readdir('./plugins', (err, files) => {
 	files.filter(f => f.endsWith('.js')).forEach(f => {
 		const name = f.substr(0, f.length - 3);
 		try {
 			const module = reload(`./plugins/${f}`);
-			ModuleManager.register(name, module, bot);
-			logger.info(`Loaded '${name}'`);
+			ModuleManager.register(name, module, Datastore, bot);
+			Logger.info(`Loaded '${name}'`);
 		} catch (e) {
-			logger.warn(`Failed to unload/load '${name}': ${e}`);
+			Logger.warn(`Failed to unload/load '${name}': ${e}`);
 		}
 	});
 });
@@ -33,21 +35,21 @@ Watch.watchTree('./plugins', {
 		} else if (prev === null) {
 			// f is a new file
 			const Module = reload(`./${f}`);
-			ModuleManager.register(name, module, bot);
-			logger.info(`Loaded '${name}'`);
+			ModuleManager.register(name, module, Datastore, bot);
+			Logger.info(`Loaded '${name}'`);
 		} else if (curr.nlink === 0) {
 			// f was removed
-			ModuleManager.unregister(name, bot);
-			logger.info(`Unloaded '${name}'`);
+			ModuleManager.unregister(name, Datastore, bot);
+			Logger.info(`Unloaded '${name}'`);
 		} else {
 			// f was changed
 			const module = reload(`./${f}`);
 			ModuleManager.unregister(name, bot);
-			ModuleManager.register(name, module, bot);
-			logger.info(`Reloaded '${name}'`);
+			ModuleManager.register(name, module, Datastore, bot);
+			Logger.info(`Reloaded '${name}'`);
 		}
 	} catch (e) {
-		logger.warn(`Failed to reload '${name}': ${e}`);
+		Logger.warn(`Failed to reload '${name}': ${e}`);
 	}
 });
 
@@ -60,21 +62,21 @@ const bot = new SlackBots({
 const originalPostMessage = bot.postMessage;
 
 bot.postMessage = function (id, text, params) {
-	logger.send(`${id}: ${text}`);
+	Logger.send(`${id}: ${text}`);
 	originalPostMessage.call(this, id, text, params);
 }
 
 bot.on('message', data => {
 	if (data.type === 'message' && data.subtype !== 'bot_message') {
-		logger.recv(`${data.user}@${data.channel}: ${data.text}`);
+		Logger.recv(`${data.user}@${data.channel}: ${data.text}`);
 		const message = data.text;
 		const parsed = Parser.parse(message);
 
         if (parsed)
-            ModuleManager.handle(parsed, data, bot);
+            ModuleManager.handle(parsed, data, Datastore, bot);
     }
 });
 
 bot.on('start', () => {
-	logger.info('Connected!');
+	Logger.info('Connected!');
 });

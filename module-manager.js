@@ -3,23 +3,23 @@ let modules = {
 };
 
 module.exports = {
-    handle: (message, event, bot) => {
+    handle: (message, event, datastore, bot) => {
         if (modules[message.command])
-            modules[message.command].handle(message, event, bot);
+            modules[message.command].handle(message, event, datastore, bot);
     },
 
-    register: (command, module, bot) => {
+    register: (command, module, datastore, bot) => {
         if (typeof(module.handle) !== 'function') // wat
             throw `Invalid or undefined handler for '${command}'`;
         if (module.onCreate)
-            module.onCreate(bot);
+            module.onCreate(datastore, bot);
         modules[command] = module;
     },
 
-    unregister: (command, bot) => {
+    unregister: (command, datastore, bot) => {
         if (modules[command]) {
             if (modules[command].onDestroy)
-                modules[command].onDestroy(bot);
+                modules[command].onDestroy(datastore, bot);
             delete modules[command];
         }
     }
