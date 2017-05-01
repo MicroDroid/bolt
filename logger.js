@@ -22,9 +22,9 @@ const getCaller = () => {
 }
 
 module.exports = {
-	info: (t) => console.log(`${colors.blue((new Date()).toISOString())} ${colors.black.bgBlue(' INFO ')} ${colors.white(t)} ${colors.grey(getCaller())}`),
-	err: (t) => console.log(`${colors.blue((new Date()).toISOString())} ${colors.black.bgRed(' ERR  ')} ${colors.red(t)} ${colors.grey(getCaller())}`),
-	warn: (t) => console.log(`${colors.blue((new Date()).toISOString())} ${colors.black.bgYellow(' WARN ')} ${colors.yellow(t)} ${colors.grey(getCaller())}`),
-    recv: (t) => console.log(`${colors.blue((new Date()).toISOString())} ${colors.black.bgWhite(' RECV ')} ${colors.white(t)} ${colors.grey(getCaller())}`),
-	send: (t) => console.log(`${colors.blue((new Date()).toISOString())} ${colors.black.bgGreen(' SEND ')} ${colors.white(t)} ${colors.grey(getCaller())}`),
+	info: (t) => console.log(`${(new Date()).toISOString()} ${colors.black.bgBlue(' INFO ')} ${colors.white(t)} ${colors.grey(getCaller())}`),
+	err: (t) => console.log(`${(new Date()).toISOString()} ${colors.black.bgRed(' ERR  ')} ${colors.red(t)} ${colors.grey(getCaller())}`),
+	warn: (t) => console.log(`${(new Date()).toISOString()} ${colors.black.bgYellow(' WARN ')} ${colors.yellow(t)} ${colors.grey(getCaller())}`),
+    recv: (t) => console.log(`${(new Date()).toISOString()} ${colors.black.bgWhite(' RECV ')} ${colors.white(t)} ${colors.grey(getCaller())}`),
+	send: (t) => console.log(`${(new Date()).toISOString()} ${colors.black.bgGreen(' SEND ')} ${colors.white(t)} ${colors.grey(getCaller())}`),
 }
