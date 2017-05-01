@@ -6,12 +6,12 @@ The best bot since mankind.
 Usage
 -----
 
-```
+```bash
 git clone https://github.com/syk-yaman/bolt
 cd ./bolt
+cp ./.env.example ./.env
+# Edit .env
 npm i
-echo "TOKEN=<your bot token>
-PREFIX=<prefix such as exclamation>"
 node .
 ```
 
