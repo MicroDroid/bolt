@@ -8,18 +8,18 @@ module.exports = {
             modules[message.command].handle(message, event, bot);
     },
 
-    register: (command, module) => {
+    register: (command, module, bot) => {
         if (typeof(module.handle) !== 'function') // wat
             throw `Invalid or undefined handler for '${command}'`;
         if (module.onCreate)
-            module.onCreate();
+            module.onCreate(bot);
         modules[command] = module;
     },
 
-    unregister: (command) => {
+    unregister: (command, bot) => {
         if (modules[command]) {
             if (modules[command].onDestroy)
-                modules[command].onDestroy();
+                modules[command].onDestroy(bot);
             delete modules[command];
         }
     }

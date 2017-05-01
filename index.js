@@ -15,7 +15,7 @@ fs.readdir('./plugins', (err, files) => {
 		const name = f.substr(0, f.length - 3);
 		try {
 			const module = reload(`./plugins/${f}`);
-			ModuleManager.register(name, module);
+			ModuleManager.register(name, module, bot);
 			logger.info(`Loaded '${name}'`);
 		} catch (e) {
 			logger.warn(`Failed to unload/load '${name}': ${e}`);
@@ -33,17 +33,17 @@ Watch.watchTree('./plugins', {
 		} else if (prev === null) {
 			// f is a new file
 			const Module = reload(`./${f}`);
-			ModuleManager.register(name, module);
+			ModuleManager.register(name, module, bot);
 			logger.info(`Loaded '${name}'`);
 		} else if (curr.nlink === 0) {
 			// f was removed
-			ModuleManager.unregister(name);
+			ModuleManager.unregister(name, bot);
 			logger.info(`Unloaded '${name}'`);
 		} else {
 			// f was changed
 			const module = reload(`./${f}`);
-			ModuleManager.unregister(name);
-			ModuleManager.register(name, module);
+			ModuleManager.unregister(name, bot);
+			ModuleManager.register(name, module, bot);
 			logger.info(`Reloaded '${name}'`);
 		}
 	} catch (e) {
