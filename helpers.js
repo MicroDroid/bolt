@@ -1,6 +1,6 @@
 const Logger = require('./logger');
 
-module.exports = {
+const Helpers = {
 	usernameFromId: id => {
 	    const user = global.users ? global.users.members.filter(u => u.id === id) : [];
 	    return user[0] ? user[0].name : null;
@@ -30,3 +30,5 @@ module.exports = {
 	    }
 	}
 }
+
+module.exports = Helpers;
