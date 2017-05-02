@@ -46,6 +46,8 @@ Here's an example plugin that utilizes all features:
 ###### test.js
 ```JavaScript
 module.exports = {
+    adminOnly: true. // Optional, defaults to false
+
     handle: (message, event, datastore, bot) => {
         // Someone said !test
         // Here you can handle the command.

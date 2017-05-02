@@ -7,6 +7,7 @@ const Watch = require('watch');
 const fs = require('fs');
 const reload = require('require-reload')(require);
 const Logger = require('./logger');
+const Helpers = require('./helpers');
 
 Logger.info('Starting..');
 
@@ -68,7 +69,7 @@ bot.postMessage = function (id, text, params) {
 
 bot.on('message', data => {
 	if (data.type === 'message' && data.subtype !== 'bot_message') {
-		Logger.recv(`${data.user}@${data.channel}: ${data.text}`);
+		Logger.recv(`${data.user} (${Helpers.usernameFromId(data.user)}) @ ${data.channel} (#${Helpers.channelNameFromId(data.channel)}): ${data.text}`);
 		const message = data.text;
 		const parsed = Parser.parse(message);
 
@@ -80,3 +81,20 @@ bot.on('message', data => {
 bot.on('start', () => {
 	Logger.info('Connected!');
 });
+
+bot.getChannels()
+	.then(chans => global.channels = chans)
+	.catch(error => {
+		Logger.warn('Unable to get channel list!');
+		global.channels = [];
+	});
+
+bot.getUsers()
+	.then(users => global.users = users)
+	.catch(error => {
+		Logger.warn('Unable to get user list!');
+		global.users = [];
+	});
+
+if (!process.env.ADMINS)
+	Logger.warn('No admins specified');
