@@ -70,8 +70,13 @@ module.exports = {
                 if (!can(event.user, message.command))
                     return Logger.info(`User ${event.user} (${Helpers.usernameFromId(event.user)}) tried to use '${message.command}'`);
 
-            if (modules[message.command])
-                modules[message.command].handle(message, event, datastore, bot);
+            if (modules[message.command]) {
+                try {
+                    modules[message.command].handle(message, event, datastore, bot);
+                } catch (e) {
+                    Logger.err(`Module ${message.command} threw: ${e}`);
+                }
+            }
         }
     },
 
