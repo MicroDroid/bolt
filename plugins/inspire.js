@@ -2,8 +2,6 @@ const axios = require('axios');
 const Logger = require('../logger');
 
 module.exports = {
-	adminOnly: true,
-	
 	handle: (message, event, datastore, bot) => {
 		axios.get('http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json&key=' + message.args)
 			.then(response => {
