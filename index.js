@@ -64,7 +64,7 @@ const originalPostMessage = bot.postMessage;
 
 bot.postMessage = function (id, text, params) {
 	Logger.send(`${id}: ${text}`);
-	originalPostMessage.call(this, id, text, params);
+	originalPostMessage.call(this, id, text, Object.assign({}, {as_user: true}, params));
 }
 
 bot.on('message', data => {
