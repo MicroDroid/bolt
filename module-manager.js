@@ -20,6 +20,26 @@ function can(id, command) {
     else return exception;
 }
 
+function generateHelp() {
+    var help = '```Bolt is a simple bot that helps you do non-sense.\n\n';
+
+    help += 'User commands:';
+
+    for (let key in modules)
+      if (modules.hasOwnProperty(key) && !modules[key].adminOnly)
+        help += '\n  ' + key + (modules[key].description ? ': ' + modules[key].description : '');
+
+    help += '\n\nAdmin commands:';
+
+    for (let key in modules)
+      if (modules.hasOwnProperty(key) && modules[key].adminOnly)
+        help += '\n  ' + key + (modules[key].description ? ': ' + modules[key].description : '');
+
+    help += '\n```';
+
+    return help;
+}
+
 module.exports = {
     handle: (message, event, datastore, bot) => {
         if ((message.command === 'grant' || message.command === 'deny') && isAdmin(event.user)) {
@@ -43,6 +63,8 @@ module.exports = {
             bot.postMessage(event.channel, ':thumbsup::skin-tone-3:');
 
             return;
+        } else if (message.command === 'help') {
+            bot.postMessage(event.channel, generateHelp());
         } else {
             if (modules[message.command] && process.env.ADMINS && modules[message.command].adminOnly)
                 if (!can(event.user, message.command))

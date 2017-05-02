@@ -46,7 +46,8 @@ Here's an example plugin that utilizes all features:
 ###### test.js
 ```JavaScript
 module.exports = {
-    adminOnly: true. // Optional, defaults to false
+    adminOnly: true, // Optional, defaults to false
+    description: 'A description that shows in help',
 
     handle: (message, event, datastore, bot) => {
         // Someone said !test
