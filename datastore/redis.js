@@ -35,7 +35,7 @@ module.exports = {
 
 	set: (key, value) => {
 		return new Promise((resolve, reject) => {
-			client.set(key, (err) => {
+			client.set(key, value, (err) => {
 				if (err)
 					reject(err);
 				else resolve();
