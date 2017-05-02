@@ -13,6 +13,7 @@
     "dotenv": "^4.0.0",
     "redis": "^2.7.1",
     "require-reload": "^0.2.2",
+    "safe-eval": "^0.3.0",
     "slackbots": "^1.0.2",
     "telebot": "^1.0.7",
     "watch": "^1.0.2"
