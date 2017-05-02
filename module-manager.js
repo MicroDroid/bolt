@@ -10,28 +10,19 @@ let exceptions = {
 }
 
 function can(id, command) {
-    try {
-        var admins = JSON.parse(process.env.ADMINS);
-            admins = typeof(admins) === 'string' ? [admins] : admins;
+    const isAdmin = Helpers.isAdmin(id);
 
-        const username = Helpers.usernameFromId(id);
+    var exception = exceptions[id] ? exceptions[id].filter(e => e.command === command)[0] : null;
+        exception = exception ? exception.grant : null;
 
-        const isAdmin = admins.indexOf(username) !== -1;
-        var exception = exceptions[id].filter(e => e.command === command)[0];
-            exception = hasException ? hasException.grant : null;
-
-        if (exception === null)
-            return isAdmin;
-        else return exception;
-    } catch (e) {
-        Logger.warn(`Failed to parse admins list for command '${message.command}'`);
-        return false;
-    }
+    if (exception === null)
+        return isAdmin;
+    else return exception;
 }
 
 module.exports = {
     handle: (message, event, datastore, bot) => {
-        if (message.command === 'grant' || message.command === 'deny') {
+        if ((message.command === 'grant' || message.command === 'deny') && isAdmin(event.user)) {
             const matches = (/\<@([\w\d]+)\>(\ssome|\saccess\sto)*\s(\w+)/).exec(message.args);
 
             if (!matches)
@@ -55,7 +46,7 @@ module.exports = {
         } else {
             if (modules[message.command] && process.env.ADMINS && modules[message.command].adminOnly)
                 if (!can(event.user, message.command))
-                    return Logger.info(`User ${event.user} (${username}) tried to use '${message.command}'`);
+                    return Logger.info(`User ${event.user} (${Helpers.usernameFromId(event.user)}) tried to use '${message.command}'`);
 
             if (modules[message.command])
                 modules[message.command].handle(message, event, datastore, bot);
