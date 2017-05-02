@@ -68,7 +68,7 @@ bot.postMessage = function (id, text, params) {
 }
 
 bot.on('message', data => {
-	if (data.type === 'message' && data.subtype !== 'bot_message') {
+	if (data.type === 'message' && !data.subtype) {
 		Logger.recv(`${data.user} (${Helpers.usernameFromId(data.user)}) @ ${data.channel} (#${Helpers.channelNameFromId(data.channel)}): ${data.text}`);
 		const message = data.text;
 		const parsed = Parser.parse(message);
