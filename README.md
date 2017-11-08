@@ -7,7 +7,7 @@ Usage
 -----
 
 ```bash
-git clone https://github.com/syk-yaman/bolt
+git clone https://github.com/MicroDroid/bolt
 cd ./bolt
 cp ./.env.example ./.env
 # Edit .env
